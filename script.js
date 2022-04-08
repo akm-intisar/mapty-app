@@ -19,12 +19,28 @@ if (navigator.geolocation) {
       console.log(`https://www.google.com/maps/@${latitude},${longitude}`);
       const map = L.map('map').setView([latitude, longitude], 13);
 
+      map.on('click', mapEvent => {
+        console.log(mapEvent);
+        const { lat, lng } = mapEvent.latlng;
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(
+            L.popup({
+              maxWidth: 500,
+              minWidth: 100,
+              autoClose: true,
+              closeOnClick: false,
+              className: 'running-popup',
+            })
+          )
+          .setPopupContent('Running')
+          .openPopup();
+      });
+
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
-
-      L.marker([latitude, longitude]).addTo(map).bindPopup('Mahee').openPopup();
     },
     function (position) {
       alert('Please Try Again');
